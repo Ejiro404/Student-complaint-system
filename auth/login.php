@@ -22,7 +22,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['name'] = $user['full_name'];
             $_SESSION['role'] = $user['role'];
 
-            // Redirect based on role
             if ($user['role'] === 'admin') {
                 header("Location: ../admin/dashboard.php");
             } else {
@@ -41,22 +40,55 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login | Student Complaint System</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | LASUED Complaint System</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 
-<h2>Login</h2>
+<div class="portal-login-wrap">
 
-<?php if ($error): ?>
-    <p style="color:red;"><?php echo $error; ?></p>
-<?php endif; ?>
+  <!-- Logo Section -->
+  <div class="portal-login-header">
+    <img
+      src="../assets/images/lsued-logo.png"
+      alt="Lagos State University of Education"
+      class="portal-logo-img"
+    >
+    <p class="portal-subtitle">Online Student Complaint System</p>
+  </div>
 
-<form method="POST">
-    <input type="email" name="email" required placeholder="Email"><br><br>
-    <input type="password" name="password" required placeholder="Password"><br><br>
-    <button type="submit">Login</button>
-</form>
+  <!-- Login Card -->
+  <div class="portal-card">
+    <div class="portal-card-head">
+      <span>Please Sign In</span>
+    </div>
+
+    <div class="portal-card-body">
+
+      <?php if (!empty($error)): ?>
+        <div class="portal-error"><?php echo htmlspecialchars($error); ?></div>
+      <?php endif; ?>
+
+      <form method="POST" action="">
+        <div class="portal-input">
+          <div class="left-icon">✉</div>
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+
+        <div class="portal-input">
+          <div class="left-icon">🔑</div>
+          <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <button class="portal-btn" type="submit">Login</button>
+      </form>
+
+    </div>
+  </div>
+
+</div>
 
 </body>
 </html>

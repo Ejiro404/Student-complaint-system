@@ -1,6 +1,7 @@
 <?php
 require_once '../config/session.php';
 require_once '../config/db.php';
+
 check_login();
 
 if ($_SESSION['role'] !== 'student') {
@@ -8,39 +9,74 @@ if ($_SESSION['role'] !== 'student') {
     exit();
 }
 
-$success = "";
-$error = "";
+$success = '';
+$error = '';
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $subject = trim($_POST['subject']);
-    $message = trim($_POST['message']);
-    $student_id = $_SESSION['user_id'];
+$student_id = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
+if ($student_id <= 0) {
+    die("Session error: student not authenticated properly.");
+}
 
-    if (empty($subject) || empty($message)) {
-        $error = "All fields are required.";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $subject = isset($_POST['subject']) ? trim($_POST['subject']) : '';
+    $complaint_text = isset($_POST['message']) ? trim($_POST['message']) : '';
+
+    if ($subject === '' || $complaint_text === '') {
+        $error = 'All fields are required.';
     } else {
-        $sql = "INSERT INTO complaints (student_id, subject, message) VALUES (?, ?, ?)";
+        $sql = "INSERT INTO complaints (student_id, subject, complaint_text)
+                VALUES (?, ?, ?)";
+
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iss", $student_id, $subject, $message);
+        if (!$stmt) {
+            die("Prepare failed: " . $conn->error);
+        }
+
+        $stmt->bind_param("iss", $student_id, $subject, $complaint_text);
 
         if ($stmt->execute()) {
             $success = "Complaint submitted successfully.";
         } else {
-            $error = "Something went wrong. Try again.";
+            $error = "Execution failed: " . $stmt->error;
         }
+
+        $stmt->close();
     }
 }
 ?>
+<?php
+$page_title = "Submit Complaint | LASUED Complaint System";
+include '../includes/portal_header.php';
+?>
 
-<h2>Submit Complaint</h2>
+<div class="tile">
+  <h2 style="margin:0 0 10px;">Submit a Complaint</h2>
 
-<?php if ($success): ?><p style="color:green;"><?php echo $success; ?></p><?php endif; ?>
-<?php if ($error): ?><p style="color:red;"><?php echo $error; ?></p><?php endif; ?>
+  <?php if ($success): ?>
+    <div class="alert-success"><?php echo htmlspecialchars($success); ?></div>
+  <?php endif; ?>
 
-<form method="POST">
-    <input type="text" name="subject" placeholder="Complaint Subject" required><br><br>
-    <textarea name="message" placeholder="Describe your complaint" required></textarea><br><br>
-    <button type="submit">Submit</button>
-</form>
+  <?php if ($error): ?>
+    <div class="alert-error"><?php echo htmlspecialchars($error); ?></div>
+  <?php endif; ?>
 
-<a href="dashboard.php">Back to Dashboard</a>
+  <form method="POST">
+    <div class="form-group">
+      <label for="subject">Subject</label>
+      <input id="subject" type="text" name="subject" required placeholder="Enter complaint subject">
+    </div>
+
+    <div class="form-group">
+      <label for="message">Complaint</label>
+      <textarea id="message" name="message" required placeholder="Describe your complaint clearly"></textarea>
+    </div>
+
+    <button class="btn" type="submit">Submit Complaint</button>
+  </form>
+
+  <p class="footer-note" style="margin-top:12px;">
+    Your complaint will be reviewed by the admin and you can track updates in “My Complaints”.
+  </p>
+</div>
+
+<?php include '../includes/portal_footer.php'; ?>
