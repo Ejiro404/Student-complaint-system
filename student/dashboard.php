@@ -34,7 +34,7 @@ include '../includes/portal_header.php';
   </div>
 </div>
 
-<p class="footer-note" style="margin-top:14px;">
+<p class="footer-note" style="margin-top:19px;">
   Tip: If your complaint status changes, you will see an “Updated” indicator on your complaints list.
 </p>
 

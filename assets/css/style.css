@@ -146,13 +146,27 @@ th { background: #f0f0f0; }
   gap: 12px;
 }
 
+.topbar-brand{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-logo{
+  height: 42px;
+  width: auto;
+  display: block;
+}
 
 
 
 .topbar-title{
-  font-weight: 800;
-  font-size: 18px;
+  font-weight: 900;
+  font-size: 22px;
+  color: #000;
+  white-space: nowrap;
 }
+
 
 .topbar-links{
   display: flex;
@@ -194,8 +208,6 @@ th { background: #f0f0f0; }
   width: 100%;
 }
 
-}
-
 
 .tile h3{
   margin: 0 0 8px;
@@ -219,11 +231,13 @@ th { background: #f0f0f0; }
 
 .portal-login-header{
   max-width: 960px;
+  padding-top: 12px;
   margin: 0 auto 18px;
   display: flex;
   flex-direction: column;   /* IMPORTANT: stacks items */
   align-items: center;      /* centers horizontally */
   justify-content: center;
+  margin-bottom: 24px; 
   gap: 8px;
   text-align: center;
 }
@@ -334,7 +348,7 @@ th { background: #f0f0f0; }
 
 /* ===== Login Logo Image ===== */
 .portal-logo-img{
-  max-width: 420px;
+  max-width: 650px;
   width: 100%;
   height: auto;
   display: block;
@@ -342,11 +356,13 @@ th { background: #f0f0f0; }
 }
 
 .portal-subtitle{
-  margin: 0;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: #333;
+  font-size: 20px;       
+  font-weight: 750;
+  letter-spacing: 1.2px;
+  color: #222;
+  margin: 4px 0 0;
 }
+
 
 /* ===== Form polish (Submit Complaint + others) ===== */
 .tile h2{
@@ -398,4 +414,8 @@ th { background: #f0f0f0; }
   filter: brightness(0.95);
 }
 
+@media (max-width: 520px){
+  .topbar-logo{ height: 34px; }
+  .topbar-title{ font-size: 16px; }
+}
 

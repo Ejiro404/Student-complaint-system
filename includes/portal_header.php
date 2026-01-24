@@ -21,7 +21,11 @@ $base = (isset($base_path) && $base_path) ? $base_path : ".."; // default for /s
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="topbar-title">LASUED Complaint-System</div>
+    <div class="topbar-brand">
+  <img src="../assets/images/lasued-logo.png" alt="LASUED Logo" class="topbar-logo">
+  <span class="topbar-title">LASUED Complaint-System</span>
+</div>
+
 
     <?php if (isset($_SESSION['role'])): ?>
       <div class="topbar-links">
