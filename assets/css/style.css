@@ -478,3 +478,71 @@ th { background: #f0f0f0; }
   font-weight: 900;
 }
 
+/* ===== Filter Pills (All / Pending / In Progress / Resolved) ===== */
+.filter-bar{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0 14px;
+}
+
+.filter-pill{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid #e6e8ef;
+  background: #f5f7ff;
+  color: #1a73e8;
+  font-weight: 800;
+  text-decoration: none;
+  transition: 0.15s ease-in-out;
+}
+
+.filter-pill:hover{
+  filter: brightness(0.98);
+}
+
+.filter-pill.active{
+  background: #1a73e8;
+  border-color: #1a73e8;
+  color: #fff;
+}
+
+
+/* ===== Pagination ===== */
+.pagination{
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 14px;
+}
+
+.page-link{
+  display: inline-block;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e6e8ef;
+  background: #fff;
+  text-decoration: none;
+  font-weight: 800;
+  color: #1a73e8;
+}
+
+.page-link:hover{ filter: brightness(0.98); }
+
+.page-link.active{
+  background: #1a73e8;
+  border-color: #1a73e8;
+  color: #fff;
+}
+
+.page-link.disabled{
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+
