@@ -33,11 +33,13 @@ $base = (isset($base_path) && $base_path) ? $base_path : ".."; // default for /s
         <?php if ($_SESSION['role'] === 'student'): ?>
           <a href="<?php echo $base; ?>/student/dashboard.php">Dashboard</a>
           <a href="<?php echo $base; ?>/student/submit_complaint.php">Submit Complaint</a>
-          <a href="<?php echo $base; ?>/student/my_complaints.php">My Complaints</a>
+          <a href="<?php echo $base; ?>/student/set_filter.php?status=ALL">My Complaints</a>
+
 
         <?php elseif ($_SESSION['role'] === 'admin'): ?>
           <a href="<?php echo $base; ?>/admin/dashboard.php">Dashboard</a>
-          <a href="<?php echo $base; ?>/admin/view_complaints.php">View Complaints</a>
+          <a href="../admin/set_filter.php?status=ALL">View Complaints</a>
+
 
         <?php endif; ?>
 

@@ -97,5 +97,13 @@ include '../includes/portal_header.php';
     <a href="view_complaints.php" style="margin-left:10px;">Back</a>
   </form>
 </div>
+<?php if (!empty($success)): ?>
+<script>
+  // Redirect back to Admin Dashboard after 2.2 seconds
+  setTimeout(() => {
+    window.location.href = 'dashboard.php';
+  }, 2200);
+</script>
+<?php endif; ?>
 
 <?php include '../includes/portal_footer.php'; ?>

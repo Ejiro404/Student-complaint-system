@@ -419,3 +419,62 @@ th { background: #f0f0f0; }
   .topbar-title{ font-size: 16px; }
 }
 
+/* ===== Alerts (Success/Error) ===== */
+.alert-success,
+.alert-error{
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin: 10px 0 14px;
+  border: 1px solid transparent;
+  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.35;
+}
+
+.alert-success{
+  background: #ecfdf3;
+  border-color: #b7f0c9;
+  color: #0f5132;
+}
+
+.alert-error{
+  background: #fdecec;
+  border-color: #f5b8b8;
+  color: #7a1111;
+}
+
+.alert-icon{
+  font-size: 18px;
+  line-height: 1;
+  margin-top: 1px;
+}
+
+@media (max-width: 520px){
+  .alert-success,
+  .alert-error{
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}
+
+/* ===== Dashboard Stats ===== */
+.stat-number{
+  font-size: 42px;
+  font-weight: 900;
+  margin: 6px 0 8px;
+  line-height: 1;
+}
+
+.stat-note{
+  color: #555;
+  margin: 0 0 12px;
+}
+
+/* Fix class naming for In Progress in dashboard */
+.status-In-Progress{
+  color: #268bd2;
+  font-weight: 900;
+}
+

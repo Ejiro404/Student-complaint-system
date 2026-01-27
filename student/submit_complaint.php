@@ -17,6 +17,13 @@ if ($student_id <= 0) {
     die("Session error: student not authenticated properly.");
 }
 
+// Default values (so form can safely echo them)
+$subject = '';
+$complaint_text = '';
+
+$redirect_after_success = false;
+$redirect_url = "my_complaints.php";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $subject = isset($_POST['subject']) ? trim($_POST['subject']) : '';
     $complaint_text = isset($_POST['message']) ? trim($_POST['message']) : '';
@@ -36,6 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             $success = "Complaint submitted successfully.";
+            $redirect_after_success = true;
+
+            // clear form values after successful submission
+            $subject = '';
+            $complaint_text = '';
         } else {
             $error = "Execution failed: " . $stmt->error;
         }
@@ -43,8 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->close();
     }
 }
-?>
-<?php
+
 $page_title = "Submit Complaint | LASUED Complaint System";
 include '../includes/portal_header.php';
 ?>
@@ -52,23 +63,43 @@ include '../includes/portal_header.php';
 <div class="tile">
   <h2 style="margin:0 0 10px;">Submit a Complaint</h2>
 
-  <?php if ($success): ?>
-    <div class="alert-success"><?php echo htmlspecialchars($success); ?></div>
+  <?php if (!empty($success)): ?>
+    <div class="alert-success" id="successAlert">
+      <span class="alert-icon">✅</span>
+      <div style="flex:1;">
+        <div><?php echo htmlspecialchars($success); ?></div>
+        <div style="font-weight:600; opacity:0.9; margin-top:2px;">
+          You can track progress in <strong>My Complaints</strong>.
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
+          <span style="font-weight:600; opacity:0.85; align-self:center;">
+            Redirecting shortly...
+          </span>
+        </div>
+      </div>
+    </div>
   <?php endif; ?>
 
-  <?php if ($error): ?>
-    <div class="alert-error"><?php echo htmlspecialchars($error); ?></div>
+  <?php if (!empty($error)): ?>
+    <div class="alert-error">
+      <span class="alert-icon">⚠️</span>
+      <div><?php echo htmlspecialchars($error); ?></div>
+    </div>
   <?php endif; ?>
 
   <form method="POST">
     <div class="form-group">
       <label for="subject">Subject</label>
-      <input id="subject" type="text" name="subject" required placeholder="Enter complaint subject">
+      <input id="subject" type="text" name="subject"
+             value="<?php echo htmlspecialchars($subject); ?>"
+             required placeholder="Enter complaint subject">
     </div>
 
     <div class="form-group">
       <label for="message">Complaint</label>
-      <textarea id="message" name="message" required placeholder="Describe your complaint clearly"></textarea>
+      <textarea id="message" name="message"
+                required placeholder="Describe your complaint clearly"><?php echo htmlspecialchars($complaint_text); ?></textarea>
     </div>
 
     <button class="btn" type="submit">Submit Complaint</button>
@@ -78,5 +109,26 @@ include '../includes/portal_header.php';
     Your complaint will be reviewed by the admin and you can track updates in “My Complaints”.
   </p>
 </div>
+
+<?php if (!empty($success) && $redirect_after_success): ?>
+<script>
+  (function () {
+    const alertBox = document.getElementById('successAlert');
+    const redirectUrl = <?php echo json_encode($redirect_url); ?>;
+
+    // Auto-fade after 3 seconds
+    setTimeout(() => {
+      if (!alertBox) return;
+      alertBox.style.transition = "opacity 400ms ease";
+      alertBox.style.opacity = "0";
+    }, 3000);
+
+    // Redirect after 3.2 seconds (so user briefly sees success message)
+    setTimeout(() => {
+      window.location.href = redirectUrl;
+    }, 3200);
+  })();
+</script>
+<?php endif; ?>
 
 <?php include '../includes/portal_footer.php'; ?>
