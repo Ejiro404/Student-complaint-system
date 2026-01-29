@@ -71,6 +71,14 @@ if ($filter_status !== '' && in_array($filter_status, $allowed_status, true)) {
 $stmt->execute();
 $result = $stmt->get_result();
 
+// Store results once (so we can render both table + cards without re-querying)
+$rows = [];
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $rows[] = $row;
+    }
+}
+
 $page_title = "My Complaints | LASUED Complaint System";
 include '../includes/portal_header.php';
 ?>
@@ -93,58 +101,102 @@ include '../includes/portal_header.php';
        href="set_filter.php?status=Resolved">Resolved</a>
   </div>
 
-  <table>
-    <tr>
-      <th>Subject</th>
-      <th>Complaint</th>
-      <th>Status</th>
-      <th>Admin Remark</th>
-      <th>Update</th>
-      <th>Date Submitted</th>
-      <th>Last Updated</th>
-    </tr>
-
-    <?php if ($result && $result->num_rows > 0): ?>
-      <?php while ($row = $result->fetch_assoc()): ?>
-        <tr>
-          <td><?php echo htmlspecialchars($row['subject']); ?></td>
-          <td><?php echo htmlspecialchars($row['complaint_text']); ?></td>
-
-          <td class="status-<?php echo str_replace(' ', '-', $row['status']); ?>">
-            <?php echo htmlspecialchars($row['status']); ?>
-          </td>
-
-          <td><?php echo htmlspecialchars($row['admin_remark'] ?? ''); ?></td>
-
-          <td>
-            <?php echo ($row['updated_at'] !== $row['created_at']) ? '<span class="badge">Updated</span>' : ''; ?>
-          </td>
-
-          <td><?php echo htmlspecialchars($row['created_at']); ?></td>
-          <td><?php echo htmlspecialchars($row['updated_at']); ?></td>
-        </tr>
-      <?php endwhile; ?>
-    <?php else: ?>
+  <!-- =======================
+       Desktop/Tablet Table
+       ======================= -->
+  <div class="table-wrap desktop-only">
+    <table>
       <tr>
-        <td colspan="7" style="text-align:center; padding:16px;">
-          No complaints found<?php echo $filter_status ? " for \"".htmlspecialchars($filter_status)."\"" : ""; ?>.
-        </td>
+        <th>Subject</th>
+        <th>Complaint</th>
+        <th>Status</th>
+        <th>Admin Remark</th>
+        <th>Update</th>
+        <th>Date Submitted</th>
+        <th>Last Updated</th>
       </tr>
+
+      <?php if (!empty($rows)): ?>
+        <?php foreach ($rows as $row): ?>
+          <tr>
+            <td><?php echo htmlspecialchars($row['subject']); ?></td>
+            <td><?php echo htmlspecialchars($row['complaint_text']); ?></td>
+
+            <td class="status-<?php echo str_replace(' ', '-', $row['status']); ?>">
+              <?php echo htmlspecialchars($row['status']); ?>
+            </td>
+
+            <td><?php echo htmlspecialchars($row['admin_remark'] ?? ''); ?></td>
+
+            <td>
+              <?php echo ($row['updated_at'] !== $row['created_at']) ? '<span class="badge">Updated</span>' : ''; ?>
+            </td>
+
+            <td><?php echo htmlspecialchars($row['created_at']); ?></td>
+            <td><?php echo htmlspecialchars($row['updated_at']); ?></td>
+          </tr>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <tr>
+          <td colspan="7" style="text-align:center; padding:16px;">
+            No complaints found<?php echo $filter_status ? " for \"".htmlspecialchars($filter_status)."\"" : ""; ?>.
+          </td>
+        </tr>
+      <?php endif; ?>
+    </table>
+  </div>
+
+  <!-- =======================
+       Mobile Card Layout
+       ======================= -->
+  <div class="mobile-only">
+    <?php if (!empty($rows)): ?>
+      <?php foreach ($rows as $row): ?>
+        <div class="complaint-card">
+          <div class="cc-head">
+            <div class="cc-subject"><?php echo htmlspecialchars($row['subject']); ?></div>
+            <div class="cc-status status-<?php echo str_replace(' ', '-', $row['status']); ?>">
+              <?php echo htmlspecialchars($row['status']); ?>
+            </div>
+          </div>
+
+          <div class="cc-body">
+            <div class="cc-label">Complaint</div>
+            <div class="cc-text"><?php echo htmlspecialchars($row['complaint_text']); ?></div>
+
+            <?php if (!empty($row['admin_remark'])): ?>
+              <div class="cc-label" style="margin-top:10px;">Admin Remark</div>
+              <div class="cc-text"><?php echo htmlspecialchars($row['admin_remark']); ?></div>
+            <?php endif; ?>
+          </div>
+
+          <div class="cc-foot">
+            <div>
+              <div class="cc-meta"><strong>Submitted:</strong> <?php echo htmlspecialchars($row['created_at']); ?></div>
+              <div class="cc-meta"><strong>Updated:</strong> <?php echo htmlspecialchars($row['updated_at']); ?></div>
+            </div>
+
+            <?php if ($row['updated_at'] !== $row['created_at']): ?>
+              <span class="badge">Updated</span>
+            <?php endif; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <div class="complaint-empty">
+        No complaints found<?php echo $filter_status ? " for \"".htmlspecialchars($filter_status)."\"" : ""; ?>.
+      </div>
     <?php endif; ?>
-  </table>
+  </div>
 
   <?php if ($total_pages > 1): ?>
     <div class="pagination">
-      <?php
-        $prev = $page - 1;
-        $next = $page + 1;
-      ?>
+      <?php $prev = $page - 1; $next = $page + 1; ?>
 
       <a class="page-link <?php echo ($page <= 1) ? 'disabled' : ''; ?>"
          href="?page=<?php echo $prev; ?>">Prev</a>
 
       <?php
-        // show up to 5 page numbers around current page
         $start = max(1, $page - 2);
         $end = min($total_pages, $page + 2);
         for ($p = $start; $p <= $end; $p++):

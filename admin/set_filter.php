@@ -20,6 +20,9 @@ if ($status === 'ALL') {
     $_SESSION['complaints_filter'] = $status;
 }
 
-// Always go to complaints page after choosing manage filter
-header("Location: view_complaints.php");
+// Preserve search query if present
+$q = isset($_GET['q']) ? trim($_GET['q']) : '';
+$redirect = "view_complaints.php" . ($q !== '' ? "?q=" . urlencode($q) : "");
+
+header("Location: " . $redirect);
 exit();
