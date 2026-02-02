@@ -1,65 +1,64 @@
+<?php
+$page_title = "LASUED Online Student Complaint System";
+$base_path = "."; // because index.php is in root
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LASUED Online Student Complaint System</title>
-  <link rel="stylesheet" href="assets/css/landing.css">
+  <title><?php echo htmlspecialchars($page_title); ?></title>
+  <link rel="stylesheet" href="<?php echo $base_path; ?>/assets/css/style.css">
 </head>
 <body>
 
-<header class="landing-header">
-  <div class="header-inner">
-    <img src="assets\images\lsued-logo.png" alt="LASUED Logo" class="header-logo">
-    <a href="auth/login.php" class="btn-outline">Login</a>
+<div class="landing-wrap">
+  <div class="landing-container">
+
+    <div class="landing-card">
+
+
+      <!-- Hero -->
+      <div class="landing-hero">
+
+        <div class="landing-logo">
+          <img src="<?php echo $base_path; ?>/assets/images/lasued-logo.png" alt="LASUED Logo">
+        </div>
+
+        <h1 class="landing-title">LASUED Online Student Complaint System</h1>
+        <p class="landing-subtitle">
+          Submit complaints, track progress, and receive official feedback from the university administration.
+        </p>
+
+        <a class="landing-cta" href="<?php echo $base_path; ?>/auth/login.php">Proceed to Login</a>
+      </div>
+
+      <!-- Features -->
+      <div class="landing-features">
+        <div class="feature-card">
+          <p class="feature-title">Secure Access</p>
+          <p class="feature-text">Student and Admin login with role-based access.</p>
+        </div>
+
+        <div class="feature-card">
+          <p class="feature-title">Complaint Submission</p>
+          <p class="feature-text">Submit a complaint with a subject and detailed message.</p>
+        </div>
+
+        <div class="feature-card">
+          <p class="feature-title">Status Tracking</p>
+          <p class="feature-text">Track Pending, In Progress, and Resolved updates easily.</p>
+        </div>
+
+        <div class="feature-card">
+          <p class="feature-title">Admin Feedback</p>
+          <p class="feature-text">View admin remarks and timestamps for transparency.</p>
+        </div>
+      </div>
+
+    </div>
   </div>
-</header>
+</div>
 
-<section class="hero">
-  <img src="assets/images/lasued-logo.png" class="hero-logo" alt="LASUED Logo">
-
-  <h1>LASUED Online Student Complaint System</h1>
-  <p>
-    Submit complaints, track progress, and receive official feedback
-    from the university administration.
-  </p>
-
-  <a href="auth/login.php" class="btn-primary">Proceed to Login</a>
-</section>
-
-<section class="features reveal">
-  <div class="feature-card">
-    <h3>Secure Access</h3>
-    <p>Student and Admin login with role-based access.</p>
-  </div>
-
-  <div class="feature-card">
-    <h3>Complaint Tracking</h3>
-    <p>Track status: Pending, In Progress, or Resolved.</p>
-  </div>
-
-  <div class="feature-card">
-    <h3>Admin Feedback</h3>
-    <p>Receive official remarks with timestamps.</p>
-  </div>
-</section>
-
-<section class="how-it-works reveal">
-  <h2>How It Works</h2>
-  <ol>
-    <li>Student submits a complaint</li>
-    <li>Admin reviews and updates status</li>
-    <li>Student tracks progress online</li>
-  </ol>
-</section>
-
-<footer class="landing-footer">
-  <p>
-    Lagos State University of Education (Otto/Ijanikin) —
-    Improving transparency and accountability.
-  </p>
-</footer>
-
-<script src="assets/js/landing.js"></script>
 </body>
 </html>

@@ -21,37 +21,86 @@ $base = (isset($base_path) && $base_path) ? $base_path : ".."; // default for /s
 
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="topbar-brand">
-  <img src="../assets/images/lasued-logo.png" alt="LASUED Logo" class="topbar-logo">
-  <span class="topbar-title">LASUED Complaint-System</span>
-</div>
 
+    <div class="topbar-left topbar-brand">
+      <?php
+        $logoPathDisk = __DIR__ . '/../assets/images/lasued-logo.png';
+        $logoPathWeb  = $base . '/assets/images/lasued-logo.png';
+      ?>
+      <?php if (file_exists($logoPathDisk)): ?>
+        <img src="<?php echo $logoPathWeb; ?>" class="topbar-logo" alt="LASUED Logo">
+      <?php endif; ?>
 
-    <?php if (isset($_SESSION['role'])): ?>
-      <div class="topbar-links">
+      <div class="topbar-title">LASUED Complaint-System</div>
+    </div>
 
-        <?php if ($_SESSION['role'] === 'student'): ?>
-          <a href="<?php echo $base; ?>/student/dashboard.php">Dashboard</a>
-          <a href="<?php echo $base; ?>/student/submit_complaint.php">Submit Complaint</a>
-          <a href="<?php echo $base; ?>/student/set_filter.php?status=ALL">My Complaints</a>
+    <!-- Desktop links -->
+    <nav class="topbar-links desktop-nav" aria-label="Primary navigation">
+      <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'student'): ?>
+        <a href="<?php echo $base; ?>/student/dashboard.php">Dashboard</a>
+        <a href="<?php echo $base; ?>/student/submit_complaint.php">Submit Complaint</a>
+        <a href="<?php echo $base; ?>/student/my_complaints.php">My Complaints</a>
+      <?php else: ?>
+        <a href="<?php echo $base; ?>/admin/dashboard.php">Dashboard</a>
+        <a href="<?php echo $base; ?>/admin/view_complaints.php">View Complaints</a>
+      <?php endif; ?>
+      <a href="<?php echo $base; ?>/auth/logout.php">Logout</a>
+    </nav>
 
+    <!-- Mobile hamburger (shows ONLY on mobile via .nav-mobile-only in CSS) -->
+    <button
+      id="navToggle"
+      class="nav-toggle nav-mobile-only"
+      type="button"
+      aria-label="Toggle menu"
+      aria-expanded="false"
+      aria-controls="mobileNav"
+    >
+      ☰
+    </button>
 
-        <?php elseif ($_SESSION['role'] === 'admin'): ?>
-          <a href="<?php echo $base; ?>/admin/dashboard.php">Dashboard</a>
-          <a href="../admin/set_filter.php?status=ALL">View Complaints</a>
+  </div>
 
-
-        <?php endif; ?>
-
-        <a href="<?php echo $base; ?>/auth/logout.php">Logout</a>
-      </div>
+  <!-- Mobile dropdown menu -->
+  <div id="mobileNav" class="mobile-nav" aria-label="Mobile navigation">
+    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'student'): ?>
+      <a href="<?php echo $base; ?>/student/dashboard.php">Dashboard</a>
+      <a href="<?php echo $base; ?>/student/submit_complaint.php">Submit Complaint</a>
+      <a href="<?php echo $base; ?>/student/my_complaints.php">My Complaints</a>
     <?php else: ?>
-      <div class="topbar-links">
-        <a href="<?php echo $base; ?>/auth/login.php">Login</a>
-      </div>
+      <a href="<?php echo $base; ?>/admin/dashboard.php">Dashboard</a>
+      <a href="<?php echo $base; ?>/admin/view_complaints.php">View Complaints</a>
     <?php endif; ?>
-
+    <a href="<?php echo $base; ?>/auth/logout.php">Logout</a>
   </div>
 </div>
 
-<div class="page-wrap">
+<script>
+  (function(){
+    const toggleBtn = document.getElementById('navToggle');
+    const nav = document.getElementById('mobileNav');
+
+    function closeNav(){
+      nav.classList.remove('open');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggleNav(){
+      const isOpen = nav.classList.toggle('open');
+      toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    // Toggle on hamburger click
+    toggleBtn.addEventListener('click', toggleNav);
+
+    // Close menu when any link is clicked (mobile UX)
+    nav.addEventListener('click', function(e){
+      if (e.target && e.target.tagName === 'A') closeNav();
+    });
+
+    // Close menu if resized to desktop width
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 700) closeNav();
+    });
+  })();
+</script>
